@@ -5,7 +5,10 @@ package com.dragos.androidfilepicker.library;
  */
 public class Constants {
 
-    public final static String DISPLAY_MODE_GRID = "grid";
-    public final static String DISPLAY_MODE_LIST = "list";
+    public final static String DISPLAY_MODE_GRID_WITH_ALBUMS = "grid_albums";
+    public final static String DISPLAY_MODE_GRID_NO_ALBUMS = "grid";
+
+    public final static String DISPLAY_MODE_LIST_WITH_ALBUMS = "list_albums";
+    public final static String DISPLAY_MODE_LIST_NO_ALBUMS = "list";
 
 }

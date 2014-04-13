@@ -1,7 +1,9 @@
 package com.dragos.androidfilepicker.library;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
@@ -13,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.dragos.androidfilepicker.library.adapters.GridViewAdapter;
 import com.dragos.androidfilepicker.library.core.Album;
@@ -31,7 +33,10 @@ import java.util.ArrayList;
  */
 public class PickerFragment extends Fragment {
     private ImagePickerConfig mConfig;
-    GridViewAdapter mGridViewAdapter;
+    private GridViewAdapter mGridViewAdapter;
+    private GridView mGridView;
+    private ArrayList<ImageItem> mImages;
+    private boolean mFirstTimeShowHelp = true;
     /**
      * Init a FilePicker with a configuration
      * @param config - FilePicker configuration
@@ -68,8 +73,7 @@ public class PickerFragment extends Fragment {
 
 
     private void initGridViewWithAlbums(){
-        Log.e("DBG", "initing!");
-      final GridView gridView = (GridView) mRootView.findViewById(R.id.gridView);
+     mGridView = (GridView) mRootView.findViewById(R.id.gridView);
       final  ArrayList<Album> albums = ImageUtils.getAlbums(getActivity());
         /*create a an ArrayList for the albums*/
 
@@ -84,31 +88,50 @@ public class PickerFragment extends Fragment {
         }
         mGridViewAdapter = new GridViewAdapter(getActivity(), albumsArray, true);
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+                if(mFirstTimeShowHelp) {
+                    Toast.makeText(getActivity(), "Use long tap to enter selection mode.", Toast.LENGTH_LONG).show();
+                    mFirstTimeShowHelp = !mFirstTimeShowHelp;
+                }
 
-                ArrayList<ImageItem> images = albums.get(position).getImages();
-                mGridViewAdapter = new GridViewAdapter(getActivity(), images, false);
+               mImages = albums.get(position).getImages();
+                mGridViewAdapter = new GridViewAdapter(getActivity(), mImages, false);
 
                 mGridViewAdapter.notifyDataSetChanged();
-                gridView.invalidate();
-                gridView.setAdapter(mGridViewAdapter);
-                gridView.setOnItemClickListener(null);
+                mGridView.invalidate();
+                mGridView.setAdapter(mGridViewAdapter);
+                mGridView.setOnItemClickListener(null);
 
-                gridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
-                gridView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+                mGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
+                mGridView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
                     @Override
                     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-                        ImageView img = (ImageView)gridView.getChildAt(position).findViewById(R.id.check);
-                        img.setVisibility(checked ? View.VISIBLE : View.INVISIBLE);
+                        ImageItem imgItem = mImages.get(position);
+                        if(imgItem.isSelected()) {
+                            mGridViewAdapter.setSelectedCount(mGridViewAdapter.getSelectedCount() - 1);
+                        } else {
+                            mGridViewAdapter.setSelectedCount(mGridViewAdapter.getSelectedCount() + 1);
+                        }
+                        imgItem.setSelected(!imgItem.isSelected());
+                        mGridViewAdapter.notifyDataSetChanged();
+                        int count = mGridViewAdapter.getSelectedCount();
+                        if(count == 0) {
+                            mode.setTitle("Tap to select");
+                        } else {
+                            mode.setTitle(count + ((count == 1) ? " image " : " images " )  + "selected");
+                        }
+                        Log.w("position", "pos: " + position);
                     }
 
                     @Override
                     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                        mode.getMenuInflater().inflate(R.menu.picker_context_menu, menu);
-                        mode.setTitle("Select items");
+                        if(!mGridViewAdapter.showTitle()) {
+                            mode.getMenuInflater().inflate(R.menu.picker_context_menu, menu);
+                        } else {
+                            return false;
+                        }
                         return true;
                     }
 
@@ -119,23 +142,43 @@ public class PickerFragment extends Fragment {
 
                     @Override
                     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                       int id = item.getItemId();
+                        if (id == R.id.sendSelection) {
+                            sendSelection();
+                            mode.finish();
+                        } else {
+                        }
                         return false;
                     }
 
                     @Override
                     public void onDestroyActionMode(ActionMode mode) {
-
+                        for(ImageItem imgItem : mImages) {
+                            imgItem.setSelected(false);
+                        }
+                        mGridViewAdapter.notifyDataSetChanged();
                     }
                 });
 
             }
         });
         mGridViewAdapter.notifyDataSetChanged();
-        gridView.invalidate();
-        gridView.setAdapter(mGridViewAdapter);
+        mGridView.invalidate();
+        mGridView.setAdapter(mGridViewAdapter);
 
     }
-
+    private void sendSelection(){
+        ArrayList<String> imagePaths = new ArrayList<String>();
+        for(ImageItem imgItem : mImages) {
+            if(imgItem.isSelected()) {
+                imagePaths.add(imgItem.getPath());
+            }
+        }
+        Intent returnIntent = new Intent();
+        returnIntent.putStringArrayListExtra(Constants.IMAGE_PICKER_PATHS_EXTRA_KEY,  imagePaths);
+        getActivity().setResult(Activity.RESULT_OK, returnIntent);
+        getActivity().finish();
+    }
     public static void initImageLoader(Context context) {
         // This configuration tuning is custom. You can tune every option, you may tune some of them,
         // or you can create default configuration by
@@ -148,7 +191,9 @@ public class PickerFragment extends Fragment {
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .build();
         // Initialize ImageLoader with configuration.
+
         ImageLoader.getInstance().init(config);
+
     }
 
     @Override
@@ -156,8 +201,17 @@ public class PickerFragment extends Fragment {
         Log.w("DBG", "fragment");
         switch (item.getItemId()) {
             case android.R.id.home:
-                getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
-                initGridViewWithAlbums();
+                if(mGridViewAdapter.showTitle()) {
+                    Intent returnIntent = new Intent();
+                    getActivity().setResult(Activity.RESULT_CANCELED, returnIntent);
+                    getActivity().finish();
+
+                } else {
+                    initGridViewWithAlbums();
+                }
+
+
+
                 return true;
             default: return super.onOptionsItemSelected(item);
         }

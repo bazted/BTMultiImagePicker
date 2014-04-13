@@ -7,6 +7,7 @@ public class ImageItem {
     private String mPath;
     private String mTitle;
     private String mSubtitle;
+    private boolean mSelected;
 
     public ImageItem() {
 
@@ -39,5 +40,13 @@ public class ImageItem {
 
     public void setSubtitle(String mSubtitle) {
         this.mSubtitle = mSubtitle;
+    }
+
+    public boolean isSelected() {
+        return this.mSelected;
+    }
+
+    public void setSelected(boolean mSelected) {
+        this.mSelected = mSelected;
     }
 }

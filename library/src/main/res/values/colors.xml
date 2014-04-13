@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <drawable name="semitransparent_blue">#22000055</drawable>
+    <drawable name="semitransparent_blue">#000055</drawable>
     <drawable name="transparent">#00ffffff</drawable>
 </resources>

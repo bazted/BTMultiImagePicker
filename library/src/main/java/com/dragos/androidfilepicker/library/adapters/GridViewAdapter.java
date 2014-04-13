@@ -24,6 +24,8 @@ public class GridViewAdapter extends BaseAdapter {
     private ArrayList<ImageItem> mItems;
     private boolean mShowTitle;
     private Context mContext;
+    private int mSelectedCount;
+    private DisplayImageOptions mDisplayOptions;
 
     /**
      * Constructor
@@ -34,6 +36,14 @@ public class GridViewAdapter extends BaseAdapter {
         this.mContext = context;
         this.mItems = items;
         this.mShowTitle = showTitle;
+
+         mDisplayOptions = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.loading)
+                .cacheInMemory(true)
+                .cacheOnDisc(false)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
 
 
@@ -99,6 +109,7 @@ public class GridViewAdapter extends BaseAdapter {
             viewHolder.thumb = (ImageView) itemView.findViewById(R.id.grid_view_item_thumb);
             viewHolder.title = (TextView) itemView.findViewById(R.id.grid_view_item_title);
             viewHolder.subtitle = (TextView) itemView.findViewById(R.id.grid_view_item_subtitle);
+            viewHolder.check = (ImageView) itemView.findViewById(R.id.check);
 
             itemView.setTag(viewHolder);
         }
@@ -107,15 +118,9 @@ public class GridViewAdapter extends BaseAdapter {
         ImageItem item = getItem(position);
 
 
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.loading)
-                .cacheInMemory(true)
-                .cacheOnDisc(false)
-                .considerExifParams(true)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .build();
 
-        ImageLoader.getInstance().displayImage("file:///" + item.getPath(), viewHolder.thumb, options);
+
+        ImageLoader.getInstance().displayImage("file:///" + item.getPath(), viewHolder.thumb, mDisplayOptions);
         if (mShowTitle) {
             viewHolder.title.setText(item.getTitle());
             viewHolder.subtitle.setText(item.getSubtitle());
@@ -124,12 +129,22 @@ public class GridViewAdapter extends BaseAdapter {
             viewHolder.subtitle.setText("");
         }
 
+        viewHolder.check.setVisibility(item.isSelected() ? View.VISIBLE : View.INVISIBLE);
         return itemView;
     }
-
+    public void setSelectedCount(int selectedCount){
+        mSelectedCount = selectedCount;
+    }
+    public int getSelectedCount(){
+        return this.mSelectedCount;
+    }
+    public boolean showTitle(){
+        return this.mShowTitle;
+    }
     static class Holder {
         public ImageView thumb;
         public TextView title;
         public TextView subtitle;
+        public ImageView check;
     }
 }

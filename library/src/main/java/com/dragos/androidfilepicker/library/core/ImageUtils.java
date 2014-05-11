@@ -4,8 +4,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.widget.ImageView;
 
+import com.dragos.androidfilepicker.library.R;
 import com.dragos.androidfilepicker.library.objects.ImageItem;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -80,5 +83,12 @@ public class ImageUtils {
 
         /*return the albums list*/
         return albums;
+    }
+    public static void displayThumb(Context context, String filePath, ImageSize size, ImageView into) {
+        Picasso.with(context).load("file:///" + filePath)
+                .placeholder(R.drawable.loading)
+                .resize(size.width, size.height)
+                .centerCrop()
+                .into(into);
     }
 }

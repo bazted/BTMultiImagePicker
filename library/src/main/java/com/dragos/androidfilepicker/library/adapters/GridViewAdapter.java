@@ -1,7 +1,6 @@
 package com.dragos.androidfilepicker.library.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dragos.androidfilepicker.library.R;
+import com.dragos.androidfilepicker.library.core.ImageSize;
+import com.dragos.androidfilepicker.library.core.ImageUtils;
 import com.dragos.androidfilepicker.library.objects.ImageItem;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -25,7 +24,6 @@ public class GridViewAdapter extends BaseAdapter {
     private boolean mShowTitle;
     private Context mContext;
     private int mSelectedCount;
-    private DisplayImageOptions mDisplayOptions;
 
     /**
      * Constructor
@@ -37,13 +35,7 @@ public class GridViewAdapter extends BaseAdapter {
         this.mItems = items;
         this.mShowTitle = showTitle;
 
-         mDisplayOptions = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.loading)
-                .cacheInMemory(true)
-                .cacheOnDisc(false)
-                .considerExifParams(true)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .build();
+
     }
 
 
@@ -118,9 +110,8 @@ public class GridViewAdapter extends BaseAdapter {
         ImageItem item = getItem(position);
 
 
+        ImageUtils.displayThumb(mContext, item.getPath(), new ImageSize(100, 100), viewHolder.thumb);
 
-
-        ImageLoader.getInstance().displayImage("file:///" + item.getPath(), viewHolder.thumb, mDisplayOptions);
         if (mShowTitle) {
             viewHolder.title.setText(item.getTitle());
             viewHolder.subtitle.setText(item.getSubtitle());

@@ -2,7 +2,6 @@ package com.dragos.androidfilepicker.library;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,10 +20,6 @@ import com.dragos.androidfilepicker.library.adapters.GridViewAdapter;
 import com.dragos.androidfilepicker.library.core.Album;
 import com.dragos.androidfilepicker.library.core.ImageUtils;
 import com.dragos.androidfilepicker.library.objects.ImageItem;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import java.util.ArrayList;
 
@@ -65,7 +60,7 @@ public class PickerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        initImageLoader(getActivity());
+
         mRootView = inflater.inflate(R.layout.fragment_picker_grid, container, false);
         initGridViewWithAlbums();
         return mRootView;
@@ -179,22 +174,7 @@ public class PickerFragment extends Fragment {
         getActivity().setResult(Activity.RESULT_OK, returnIntent);
         getActivity().finish();
     }
-    public static void initImageLoader(Context context) {
-        // This configuration tuning is custom. You can tune every option, you may tune some of them,
-        // or you can create default configuration by
-        //  ImageLoaderConfiguration.createDefault(this);
-        // method.
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-                .threadPriority(Thread.NORM_PRIORITY - 2)
-                .denyCacheImageMultipleSizesInMemory()
-                .discCacheFileNameGenerator(new Md5FileNameGenerator())
-                .tasksProcessingOrder(QueueProcessingType.LIFO)
-                .build();
-        // Initialize ImageLoader with configuration.
 
-        ImageLoader.getInstance().init(config);
-
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

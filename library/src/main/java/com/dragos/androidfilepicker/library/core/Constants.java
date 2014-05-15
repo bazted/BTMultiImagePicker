@@ -1,7 +1,8 @@
-package com.dragos.androidfilepicker.library;
+package com.dragos.androidfilepicker.library.core;
 
 /**
  * Created by Dragos Raducanu (raducanu.dragos@gmail.com) on 3/9/14.
+ * modified by BAZTED
  */
 public final class Constants {
 

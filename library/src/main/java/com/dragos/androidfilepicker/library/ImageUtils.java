@@ -1,22 +1,21 @@
-package com.dragos.androidfilepicker.library.core;
+package com.dragos.androidfilepicker.library;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.ImageView;
-import com.dragos.androidfilepicker.library.R;
-import com.dragos.androidfilepicker.library.model.ImageItem;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 /**
  * Created by Dragos Raducanu (raducanu.dragos@gmail.com) on 3/23/14.
+ * modified by BAZTED
  */
-public final class ImageUtils {
+final class ImageUtils {
 
-    public static ArrayList<Album> getAlbums(Context context) {
+    static ArrayList<Album> getAlbums(Context context) {
         ArrayList<Album> albums = new ArrayList<Album>();
 
 
@@ -42,17 +41,11 @@ public final class ImageUtils {
         if (cur.moveToFirst()) {
             int bucketName = cur.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
             int bucketId = cur.getColumnIndex(MediaStore.Images.Media.BUCKET_ID);
-            int dataIndex = cur.getColumnIndex(MediaStore.Images.Media.DATA);
-            int imageName = cur.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME);
-            int imageDate = cur.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED);
-
+            int pathIndex = cur.getColumnIndex(MediaStore.Images.Media.DATA);
 
             do {
                 /*create a new ImageItem object*/
-                ImageItem img = new ImageItem();
-                img.setTitle(cur.getString(imageName));
-                img.setSubtitle(cur.getString(imageDate));
-                img.setPath(cur.getString(dataIndex));
+                Image img = new Image(cur.getString(pathIndex));
 
                 /*get the bucket id*/
                 String bucket_id = cur.getString(bucketId);
@@ -69,9 +62,7 @@ public final class ImageUtils {
                 }
 
                 if (!ok) { /*this image doesn't have a bucket yet*/
-                    Album alb = new Album();
-                    alb.setId(bucket_id);
-                    alb.setName(cur.getString(bucketName));
+                    Album alb = new Album(bucket_id, cur.getString(bucketName));
                     alb.addImage(img);
                     albums.add(alb);
                 }
@@ -84,10 +75,10 @@ public final class ImageUtils {
         return albums;
     }
 
-    public static void displayThumb(Context context, String filePath, ImageSize size, ImageView into) {
-        Picasso.with(context).load("file:///" + filePath)
+    static void displayThumb(Context context, String filePath, ImageView into) {
+        Picasso.with(context).load("file://" + filePath)
                 .placeholder(R.drawable.loading)
-                .resize(size.width, size.height)
+                .fit()
                 .centerCrop()
                 .into(into);
     }

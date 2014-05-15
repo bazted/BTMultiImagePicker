@@ -1,49 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:focusable="false"
-                android:background="@drawable/grid_view_selector">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="@drawable/abc_list_selector_holo_dark">
+
 
     <ImageView
         android:id="@+id/grid_view_item_thumb"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:maxHeight="200dp"
         android:adjustViewBounds="true"
-        android:src="@drawable/loading_bmp"
-        android:scaleType="centerCrop"/>
+        android:contentDescription="@string/empty"
+        android:maxHeight="200dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/loading_bmp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
         android:orientation="vertical"
-
-        android:layout_alignBaseline="@id/grid_view_item_thumb">
+        android:paddingLeft="20dp">
 
         <TextView
             android:id="@+id/grid_view_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Camera roll"
-            android:textColor="@android:color/white"
             android:shadowColor="@android:color/black"
-            android:shadowRadius="5"/>
+            android:shadowRadius="5"
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/grid_view_item_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="20 PHOTOS"
-            android:textColor="@android:color/white"
             android:shadowColor="@android:color/black"
             android:shadowRadius="5"
-            />
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
 
@@ -51,10 +45,8 @@
         android:id="@+id/check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
+        android:layout_gravity="top|right"
+        android:contentDescription="@string/empty"
         android:src="@drawable/ic_check_mark"
-        android:visibility="invisible"/>
-
-
-</RelativeLayout>
+        android:visibility="invisible" />
+</FrameLayout>

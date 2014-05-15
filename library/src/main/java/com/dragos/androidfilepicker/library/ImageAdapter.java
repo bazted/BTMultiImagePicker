@@ -7,34 +7,27 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.dragos.androidfilepicker.library.core.ImageSize;
-import com.dragos.androidfilepicker.library.core.ImageUtils;
-import com.dragos.androidfilepicker.library.model.ImageItem;
 
 import java.util.ArrayList;
 
 /**
  * Created by Dragos Raducanu (raducanu.dragos@gmail.com) on 3/23/14.
+ * modified by BAZTED
  */
-class GridViewAdapter extends BaseAdapter {
+class ImageAdapter extends BaseAdapter {
 
-    private ArrayList<ImageItem> mItems;
-    private boolean mShowTitle;
-    private Context mContext;
-    private int mSelectedCount;
+    private final ArrayList<Image> mItems;
+    private final Context mContext;
 
     /**
      * Constructor
      *
      * @param context The current context.
      */
-    GridViewAdapter(Context context, ArrayList<ImageItem> items, boolean showTitle) {
+    ImageAdapter(Context context, ArrayList<Image> items) {
         this.mContext = context;
         this.mItems = items;
-        this.mShowTitle = showTitle;
-
     }
-
 
     /**
      * How many items are in the data set represented by this Adapter.
@@ -54,7 +47,7 @@ class GridViewAdapter extends BaseAdapter {
      * @return The data at the specified position.
      */
     @Override
-    public ImageItem getItem(int position) {
+    public Image getItem(int position) {
         return mItems.get(position);
     }
 
@@ -102,39 +95,62 @@ class GridViewAdapter extends BaseAdapter {
             viewHolder = (Holder) convertView.getTag();
         }
 
-        final ImageItem item = getItem(position);
+        final Image item = getItem(position);
 
 
-        ImageUtils.displayThumb(mContext, item.getPath(), new ImageSize(100, 100), viewHolder.thumb);
+        ImageUtils.displayThumb(mContext, item.getPath(), viewHolder.thumb);
 
-        if (mShowTitle) {
-            viewHolder.title.setText(item.getTitle());
-            viewHolder.subtitle.setText(item.getSubtitle());
-        } else {
-            viewHolder.title.setText("");
-            viewHolder.subtitle.setText("");
-        }
+
+        viewHolder.title.setVisibility(View.GONE);
+        viewHolder.subtitle.setVisibility(View.GONE);
+
 
         viewHolder.check.setVisibility(item.isSelected() ? View.VISIBLE : View.INVISIBLE);
         return convertView;
     }
 
-    public void setSelectedCount(int selectedCount) {
-        mSelectedCount = selectedCount;
+    void setSelected(int position) {
+        if (position < getCount()) {
+            final Image item = getItem(position);
+            item.setSelected(!item.isSelected());
+            mItems.set(position, item);
+            notifyDataSetChanged();
+        }
     }
 
-    public int getSelectedCount() {
-        return this.mSelectedCount;
+    void clearSelected() {
+        for (int i = 0; i < getCount(); i++) {
+            final Image item = getItem(i);
+            item.setSelected(false);
+            mItems.set(i, item);
+        }
+        notifyDataSetChanged();
     }
 
-    public boolean showTitle() {
-        return this.mShowTitle;
+    int getSelectedCount() {
+        int i = 0;
+        for (Image mItem : mItems) {
+            if (mItem.isSelected()) {
+                i += 1;
+            }
+        }
+        return i;
     }
 
-    static class Holder {
-        public ImageView thumb;
-        public TextView title;
-        public TextView subtitle;
-        public ImageView check;
+    ArrayList<String> getSelectedPaths() {
+        ArrayList<String> imagePaths = new ArrayList<String>();
+        for (Image imgItem : mItems) {
+            if (imgItem.isSelected()) {
+                imagePaths.add(imgItem.getPath());
+            }
+        }
+        return imagePaths;
+    }
+
+    private class Holder {
+        ImageView thumb;
+        TextView title;
+        TextView subtitle;
+        ImageView check;
     }
 }

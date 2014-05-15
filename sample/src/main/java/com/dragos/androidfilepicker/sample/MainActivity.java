@@ -9,8 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import com.dragos.androidfilepicker.library.Constants;
 import com.dragos.androidfilepicker.library.ImagePickerActivity;
+import com.dragos.androidfilepicker.library.core.Constants;
 
 import java.util.ArrayList;
 

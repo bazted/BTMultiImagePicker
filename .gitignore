@@ -1,7 +1,12 @@
-.gradle
 /local.properties
-/.idea/workspace.xml
 .DS_Store
+
+#Intelij files
 *.iml
-build
 .idea
+/.idea/workspace.xml
+
+
+#Gradle
+build
+.gradle

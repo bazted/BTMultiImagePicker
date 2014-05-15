@@ -10,9 +10,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-/**
- * Created by BAZTED on 05/15/14.
- */
 class AlbumAdapter extends BaseAdapter {
 
     private final ArrayList<Album> albumList;

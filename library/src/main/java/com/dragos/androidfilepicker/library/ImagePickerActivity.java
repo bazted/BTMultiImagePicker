@@ -16,12 +16,6 @@ import com.dragos.androidfilepicker.library.core.Constants;
 
 import java.util.ArrayList;
 
-/**
- * Created by Dragos Raducanu (raducanu.dragos@gmail.com) on 4/13/14.
- * modified by BAZTED
- */
-
-
 public class ImagePickerActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
 
     private GridView mGridView;
@@ -149,6 +143,19 @@ public class ImagePickerActivity extends ActionBarActivity implements AdapterVie
         finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (!insideAlbum) {
+            super.onBackPressed();
+        } else {
+            revealImageAdapter();
+            if (albumAdapter == null) {
+                startLoader();
+            } else {
+                setAlbumAdapter(albumAdapter);
+            }
+        }
+    }
 
     private class AlbumsLoader extends AsyncTask<Void, Void, ArrayList<Album>> {
         @Override
@@ -178,20 +185,6 @@ public class ImagePickerActivity extends ActionBarActivity implements AdapterVie
             }
         }
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (!insideAlbum) {
-            super.onBackPressed();
-        } else {
-            revealImageAdapter();
-            if (albumAdapter == null) {
-                startLoader();
-            } else {
-                setAlbumAdapter(albumAdapter);
-            }
-        }
     }
 
 

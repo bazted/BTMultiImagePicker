@@ -3,17 +3,11 @@ package com.dragos.androidfilepicker.library;
 
 import java.util.ArrayList;
 
-/**
- * Created by Dragos Raducanu (raducanu.dragos@gmail.com) on 3/23/14.
- * modified by BAZTED
- */
 class Album {
     private final String mId;
     private final String mName;
-
-
-    private String subTitle = "";
     private final ArrayList<Image> mImages;
+    private String subTitle = "";
 
     Album(String mId, String mName) {
         this.mId = mId;

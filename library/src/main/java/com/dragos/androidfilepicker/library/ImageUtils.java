@@ -9,10 +9,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-/**
- * Created by Dragos Raducanu (raducanu.dragos@gmail.com) on 3/23/14.
- * modified by BAZTED
- */
 final class ImageUtils {
 
     static ArrayList<Album> getAlbums(Context context) {

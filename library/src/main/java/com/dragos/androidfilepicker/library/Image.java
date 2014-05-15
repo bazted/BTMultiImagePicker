@@ -1,8 +1,5 @@
 package com.dragos.androidfilepicker.library;
 
-/**
- * Created by Dragos Raducanu (raducanu.dragos@gmail.com) on 3/23/14.
- */
 class Image {
     private final String mPath;
     private boolean mSelected;

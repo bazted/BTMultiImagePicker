@@ -1,9 +1,5 @@
 package com.dragos.androidfilepicker.library.core;
 
-/**
- * Created by Dragos Raducanu (raducanu.dragos@gmail.com) on 3/9/14.
- * modified by BAZTED
- */
 public final class Constants {
 
     public final static String DISPLAY_MODE_GRID_WITH_ALBUMS = "grid_albums";

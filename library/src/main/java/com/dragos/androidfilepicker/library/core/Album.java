@@ -1,7 +1,7 @@
 package com.dragos.androidfilepicker.library.core;
 
 
-import com.dragos.androidfilepicker.library.objects.ImageItem;
+import com.dragos.androidfilepicker.library.model.ImageItem;
 
 import java.util.ArrayList;
 
@@ -14,9 +14,10 @@ public class Album {
     private ArrayList<ImageItem> mImages;
 
 
-    public Album(){
+    public Album() {
         this.mImages = new ArrayList<ImageItem>();
     }
+
     public void addImage(ImageItem img) {
         mImages.add(img);
     }
@@ -52,7 +53,7 @@ public class Album {
         return mImages.get(index);
     }
 
-    public ArrayList<ImageItem> getImages(){
+    public ArrayList<ImageItem> getImages() {
         return this.mImages;
     }
 }

@@ -1,4 +1,4 @@
-package com.dragos.androidfilepicker.library.adapters;
+package com.dragos.androidfilepicker.library;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,18 +7,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.dragos.androidfilepicker.library.R;
 import com.dragos.androidfilepicker.library.core.ImageSize;
 import com.dragos.androidfilepicker.library.core.ImageUtils;
-import com.dragos.androidfilepicker.library.objects.ImageItem;
+import com.dragos.androidfilepicker.library.model.ImageItem;
 
 import java.util.ArrayList;
 
 /**
  * Created by Dragos Raducanu (raducanu.dragos@gmail.com) on 3/23/14.
  */
-public class GridViewAdapter extends BaseAdapter {
+class GridViewAdapter extends BaseAdapter {
 
     private ArrayList<ImageItem> mItems;
     private boolean mShowTitle;
@@ -30,11 +28,10 @@ public class GridViewAdapter extends BaseAdapter {
      *
      * @param context The current context.
      */
-    public GridViewAdapter(Context context, ArrayList<ImageItem> items, boolean showTitle) {
+    GridViewAdapter(Context context, ArrayList<ImageItem> items, boolean showTitle) {
         this.mContext = context;
         this.mItems = items;
         this.mShowTitle = showTitle;
-
 
     }
 
@@ -92,22 +89,20 @@ public class GridViewAdapter extends BaseAdapter {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View itemView = convertView;
-        if (itemView == null) {
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            itemView = inflater.inflate(R.layout.grid_view_item, null);
-
-            Holder viewHolder = new Holder();
-            viewHolder.thumb = (ImageView) itemView.findViewById(R.id.grid_view_item_thumb);
-            viewHolder.title = (TextView) itemView.findViewById(R.id.grid_view_item_title);
-            viewHolder.subtitle = (TextView) itemView.findViewById(R.id.grid_view_item_subtitle);
-            viewHolder.check = (ImageView) itemView.findViewById(R.id.check);
-
-            itemView.setTag(viewHolder);
+        final Holder viewHolder;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.grid_view_item, parent, false);
+            viewHolder = new Holder();
+            viewHolder.thumb = (ImageView) convertView.findViewById(R.id.grid_view_item_thumb);
+            viewHolder.title = (TextView) convertView.findViewById(R.id.grid_view_item_title);
+            viewHolder.subtitle = (TextView) convertView.findViewById(R.id.grid_view_item_subtitle);
+            viewHolder.check = (ImageView) convertView.findViewById(R.id.check);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (Holder) convertView.getTag();
         }
 
-        Holder viewHolder = (Holder) itemView.getTag();
-        ImageItem item = getItem(position);
+        final ImageItem item = getItem(position);
 
 
         ImageUtils.displayThumb(mContext, item.getPath(), new ImageSize(100, 100), viewHolder.thumb);
@@ -121,17 +116,21 @@ public class GridViewAdapter extends BaseAdapter {
         }
 
         viewHolder.check.setVisibility(item.isSelected() ? View.VISIBLE : View.INVISIBLE);
-        return itemView;
+        return convertView;
     }
-    public void setSelectedCount(int selectedCount){
+
+    public void setSelectedCount(int selectedCount) {
         mSelectedCount = selectedCount;
     }
-    public int getSelectedCount(){
+
+    public int getSelectedCount() {
         return this.mSelectedCount;
     }
-    public boolean showTitle(){
+
+    public boolean showTitle() {
         return this.mShowTitle;
     }
+
     static class Holder {
         public ImageView thumb;
         public TextView title;

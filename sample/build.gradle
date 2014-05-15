@@ -1,12 +1,8 @@
 apply plugin: 'android'
-
+apply from: '../tools-version.gradle'
 android {
-    compileSdkVersion 19
-    buildToolsVersion '19.0.3'
 
     defaultConfig {
-        minSdkVersion 10
-        targetSdkVersion 19
         versionCode 1
         versionName "1.0"
     }

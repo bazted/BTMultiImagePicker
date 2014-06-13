@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.ImageView;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

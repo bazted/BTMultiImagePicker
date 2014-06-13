@@ -4,10 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.dragos.androidfilepicker.sample.MainActivity"
-    tools:ignore="MergeRootFrame" >
+    tools:ignore="MergeRootFrame">
+
     <Button
         android:id="@+id/openFilePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Open ImagePicker"/>
-    </RelativeLayout>
+        android:text="Open ImagePicker" />
+</RelativeLayout>
